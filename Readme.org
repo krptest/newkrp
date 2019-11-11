@@ -7,6 +7,6 @@ of the various branches in one aggregated XML file.
 =KR6c0128-test= is a denormalized version of =kanripo/KR6c0128= for
 the purpose of developing the new format.  A first draft of this
 sample is here:
-file:KR6c0128-test/_branches/_xml/KR6c00128.xml
+[[file:KR6c0128-test/_branches/_xml/KR6c00128.xml][KR6c0128.xml]]
 
 
