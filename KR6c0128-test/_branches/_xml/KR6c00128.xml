@@ -5,18 +5,48 @@
          <titleStmt>
             <title>般若波羅蜜多心經</title>
          </titleStmt>
-         <publicationStmt><p></p>
+         <publicationStmt>
+            <p>Published at <ref target="https://github.com/kanripo/KR6c0128"/></p>
          </publicationStmt>
          <sourceDesc>
-	   
-	   <p>高麗藏 東國大學校影印本</p>
+            <listBibl>
+               <bibl type="BASEEDITION" xml:id="T"><title></title></bibl>
+               <bibl type="WITNESS" xml:id="TKD"><title>高麗藏 東國大學校影印本</title></bibl>
+            </listBibl>
          </sourceDesc>
       </fileDesc>
   </teiHeader>
   <text>
     <front></front>
     <body>
-      <p>Some text here.</p>
+      <div>
+	<ab><pb n="KR6c0128_TKD_05-1035a" edRef="#TKD"/>
+<pb n="KR6c0128_T_001-0848c" edRef="#T"/><lb edRef="#T"/><lb edRef="#T"/><lb edRef="#T"/>
+<lb edRef="#TKD"/>般若波羅蜜多心經                羽
+<lb edRef="#TKD"/><lb edRef="#T"/>唐三藏法師玄奘    譯
+<lb edRef="#TKD"/><lb edRef="#T"/>觀自在菩薩行深般若波羅蜜多時
+<lb edRef="#TKD"/>照見五<lb edRef="#T"/>薀皆空度一切若厄舎利子
+<lb edRef="#TKD"/>色不異空空不<lb edRef="#T"/>異色色卽是空空卽
+<lb edRef="#TKD"/>是色受想行識亦復如<lb edRef="#T"/>是舎利子是
+<lb edRef="#TKD"/>諸法空相不生不滅不垢不淨<lb edRef="#T"/>不增
+<lb edRef="#TKD"/>不減是故空中無色無受想行識無
+<lb edRef="#TKD"/>眼<lb edRef="#T"/>耳鼻舌身意無色聲香味觸法無
+<lb edRef="#TKD"/>眼界乃至<lb edRef="#T"/>無意識界無無明亦無無
+<lb edRef="#TKD"/>明盡乃至無老死<lb edRef="#T"/>亦無老死盡無苦
+<lb edRef="#TKD"/>集滅道無智亦無得以無<lb edRef="#T"/>所得故菩
+<lb edRef="#TKD"/>提薩埵依般若波羅蜜多故心無<lb edRef="#T"/>罣
+<lb edRef="#TKD"/>㝵 㝵故無有恐怖遠離顚倒夢
+<lb edRef="#TKD"/>想究<lb edRef="#T"/>竟涅槃三世諸佛依般若波羅
+<lb edRef="#TKD"/>蜜多故得阿<lb edRef="#T"/>䅶多羅三藐三菩提故
+<lb edRef="#TKD"/>知般若波羅蜜多是<lb edRef="#T"/>大神呪是大明
+<lb edRef="#TKD"/>呪是無上呪是等呪能<lb edRef="#T"/>除一切
+<lb edRef="#TKD"/>苦眞實不虛故說般若波羅蜜多呪
+<lb edRef="#TKD"/><lb edRef="#T"/>卽說呪曰
+<lb edRef="#TKD"/><lb edRef="#T"/>揭帝揭帝  般羅揭帝  般羅僧揭
+<lb edRef="#TKD"/>帝<lb edRef="#T"/><lb edRef="#T"/>  菩提僧莎訶
+<lb edRef="#TKD"/><lb edRef="#T"/>般若波羅蜜多心經
+</ab>
+      </div>
     </body>
   </text>
 </TEI>
