@@ -1,0 +1,3 @@
+#+TITLE: Data branch for _data
+
+This branch contains data files that are used by the system.  The folder =imglist= has a list of digital facsimile pages for each file of the text.  This information is used to display text and image side-by-side.

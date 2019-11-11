@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<TEI xmlns="http://www.tei-c.org/ns/1.0">
+  <teiHeader>
+      <fileDesc>
+         <titleStmt>
+            <title>般若波羅蜜多心經</title>
+         </titleStmt>
+         <publicationStmt><p></p>
+         </publicationStmt>
+         <sourceDesc>
+	   
+	   <p>高麗藏 東國大學校影印本</p>
+         </sourceDesc>
+      </fileDesc>
+  </teiHeader>
+  <text>
+    <front></front>
+    <body>
+      <p>Some text here.</p>
+    </body>
+  </text>
+</TEI>
