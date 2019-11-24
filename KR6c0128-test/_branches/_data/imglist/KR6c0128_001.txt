@@ -1,3 +1,4 @@
 003-0063a00	TKD 05-1035a	buddhist/K-koreana/05-tif/1000-1099/05_1035_A.TIF
-001-0848b00	T 001-0848b	buddhist/T-taisho/T08/08/T08-0848.png
+000-0848a00	T 000-0848a	buddhist/T-taisho/T08/08/T08-0848.png
+000-0848b00	T 000-0848b	buddhist/T-taisho/T08/08/T08-0848.png
 001-0848c00	T 001-0848c	buddhist/T-taisho/T08/08/T08-0848.png
