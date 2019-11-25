@@ -92,7 +92,7 @@ def get_property(p_in):
     return "Bad property: %s" % (p_in)
 
 # loop through the lines and return a dictionary of metadata and text content
-def parse_text(lines):
+def parse_text(lines, md=False):
     lx={'TEXT' : []}
     lcnt=0
     nl=[]
@@ -108,13 +108,19 @@ def parse_text(lines):
 #            l=re.sub("<pb:([^_]+)_([^_]+)_([^>]+)>", "<pb ed='\\2' n='\\3' xml:id='\\1-\\2-\\3'/>", l)
             l=re.sub("<pb:([^_]+)_([^_]+)_([^>]+)>", "</div><div type='p' n='\\3'>", l)
             lcnt = 0
-        if "" in l:
-            lcnt += 1
+        if "<md:" in l:
+            l=re.sub("<pb:([^_]+)_([^_]+)_([^>]+)>", "<!-- md: \\1-\\2-\\3-->", l)
+        lcnt += 1
+        if md:
+            l=re.sub("¶", f"<!-- ¶ -->", l)
+        else:
             l=re.sub("¶", f"\n<lb n='{lcnt}'/>", l)
         if l == "":
             np.append(nl)
             nl=[]
         else:
+            if md:
+                l=l+"\n"
             nl.append(l)    
     lx['TEXT'] = np
     return lx
@@ -128,13 +134,16 @@ def convert_text(txtid, user='kanripo'):
     for branch in branches:
         flist = [a.path for a in hs.get_contents("/", ref=branch)]
         pdic = {}
+        md = False
         for path in flist:
             if path.startswith(txtid):
                 r=requests.get(f"https://raw.githubusercontent.com/{user}/{txtid}/{branch}/{path}")
                 if r.status_code == 200:
                     cont=r.content.decode(r.encoding)
+                    if "<md:" in cont:
+                        md = True
                     lines=cont.split("\n")
-                    lx = parse_text(lines)
+                    lx = parse_text(lines, md)
                 else:
                     return "No valid content found."
                 pdic[path] = lx
