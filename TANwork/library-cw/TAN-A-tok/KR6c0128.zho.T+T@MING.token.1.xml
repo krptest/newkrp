@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-model href="../../schemas/TAN-A-tok.rnc" type="application/relax-ng-compact-syntax"?>
+<?xml-model href="../../schemas/TAN-A-tok.sch" type="application/xml" schematypens="http://purl.oclc.org/dsdl/schematron"?>
+<!--<?xml-model href="http://textalign.net/release/TAN-2018/schemas/TAN-A-tok.rnc" type="application/relax-ng-compact-syntax"?>
+<?xml-model href="http://textalign.net/release/TAN-2018/schemas/TAN-A-tok.sch" type="application/xml" schematypens="http://purl.oclc.org/dsdl/schematron"?>-->
+<TAN-A-tok xmlns="tag:textalign.net,2015:ns" TAN-version="2018" id="tag:cwittern@kanripo.org,2019:TAN-A-tok,T+T@MING">
+    <head>
+        <name>token-based alignment of two versions of Heart Sutra</name>
+        <master-location href="KR6c0128.zho.token.1.xml"/>
+        <license>
+            <IRI>http://creativecommons.org/licenses/by/4.0/deed.en_US</IRI>
+            <name>Creative Commons Attribution 4.0 International License</name>
+            <desc>This license is granted independent of rights and licenses associated with the
+                source. </desc>
+        </license>
+        <licensor who="cwittern"/>
+        <source xml:id="T">
+            <IRI>tag:cwittern@kanripo.org,2019:T</IRI>
+            <name>Taisho version</name>
+            <location href="../KR6c0128.zho.T.1924.xml" when-accessed="2019-11-24"/>
+        </source>
+        <source xml:id="T@MING">
+            <IRI>tag:cwittern@kanripo.org,2019:T@MING</IRI>
+            <name>Song version</name>
+            <location href="../KR6c0128.zho.T@MING.1924.xml" when-accessed="2019-11-24"/>
+        </source>
+        <definitions>
+            <bitext-relation xml:id="unclear">
+                <IRI>tag:cwittern@kanripo.org,2019:bitext-relation:unclear</IRI>
+                <name>Unclear</name>
+            </bitext-relation>
+            <reuse-type xml:id="correlationGeneral">
+                <IRI>tag:kalvesmaki@gmail.com,2014:reuse-type:correlation-general</IRI>
+                <name>Texts are generally correlated, but without specifying the relation</name>
+            </reuse-type>
+            <comment when="2019-11-23" who="cwittern">The following is equivalent to @which = 'kanji'</comment>
+            <token-definition src="T T@YUAN" pattern="[&#x3400;-&#x4DFF;&#x4e00;-&#x9FFF;&#xF900;-&#xFAFF;&#xFE30;-&#xFE4F;&#x00020000;-&#x0002A6DF;&#x0002A700;-&#x0002B73F;&#x0002B740;-&#x0002B81F;&#x0002B820;-&#x0002F7FF;]"/>
+            <person xml:id="cwittern">
+                <IRI>tag:cwittern@kanripo.org,2019:self</IRI>
+                <name>Christian Wittern</name>
+            </person>
+            <algorithm xml:id="xslt1"><IRI>tag:textalign.net,2015:stylesheet:convert-tan2017-to-tan2018</IRI><name>Stylesheet to populate a TAN-A-div file from collections.</name><desc>Stylesheet at: ../../do%20things/convert/convert%20TAN%202017%20to%20TAN%202018.xsl</desc></algorithm>
+            <role xml:id="creator">
+                <IRI>http://schema.org/creator</IRI>
+                <name xml:lang="eng">creator</name>
+            </role>
+            <role xml:id="stylesheet1" which="stylesheet"/>
+        </definitions>
+        <resp who="park" roles="creator"/>
+        <resp who="xslt1" roles="stylesheet1"/>
+        <change who="xslt1" when="2017-11-02T16:42:59.667-04:00">TAN file updated to 2018 schemas.</change>
+    </head>
+    <body reuse-type="correlationGeneral" bitext-relation="unclear">
+        <align>
+            <tok src="T@MING" ref="001-0848c 6" pos="7-8" val="奉詔"/>
+        </align>
+    </body>
+</TAN-A-tok>
