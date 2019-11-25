@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!--
 <?xml-model href="../schemas/TAN-T.rnc" type="application/relax-ng-compact-syntax"?>
-<?xml-model href="../schemas/TAN-T.sch" type="application/xml" schematypens="http://purl.oclc.org/dsdl/schematron"?> -->
+<?xml-model href="../schemas/TAN-T.sch" type="application/xml" schematypens="http://purl.oclc.org/dsdl/schematron"?> 
+<!--
 <?xml-model href="http://textalign.net/release/TAN-2018/schemas/TAN-T.rnc" type="application/relax-ng-compact-syntax"?>
-<?xml-model href="http://textalign.net/release/TAN-2018/schemas/TAN-T.sch" type="application/xml" schematypens="http://purl.oclc.org/dsdl/schematron"?>
+<?xml-model href="http://textalign.net/release/TAN-2018/schemas/TAN-T.sch" type="application/xml" schematypens="http://purl.oclc.org/dsdl/schematron"?> -->
 <TAN-T xmlns="tag:textalign.net,2015:ns" id="tag:kanripo.org,2019:tan-t.KR6c0128.zho.T@YUAN.1924:text" TAN-version="2018">
 <head>
     <name>般若波羅蜜多心經</name>
@@ -97,7 +97,7 @@
 </div><div type='l' n='26'>空之相又非真相之空，乃妄想之相為之
 </div><div type='l' n='27'>空相，是空相愚及世人禍及今古，往往愈
 </div><div type='l' n='28'>墮彌深不知其幾。斯空相，前代帝王被所
-</div><div type='l' n='29'>惑而幾喪天下者，周之穆王，漢之武帝，唐之</div><div type='l' n='30'></div><div type='p' n='001-0848b'>
+</div><div type='l' n='29'>惑而幾喪天下者，周之穆王，漢之武帝，唐之</div><div type='l' n='30'></div></div><div type='p' n='001-0848b'><div type='l'>
 </div><div type='l' n='1'>玄宗，蕭梁武帝，元魏主燾，李後主，宋徽宗。
 </div><div type='l' n='2'>此數帝廢國怠政，惟蕭梁武帝、宋之徽宗以
 </div><div type='l' n='3'>及殺身，皆由妄想飛升及入佛天之地。其佛
@@ -129,7 +129,7 @@
 </div><div type='l' n='25'>觀空，又似日中逃影。茲經喻如大地，何物不
 </div><div type='l' n='26'>從地之所生，諸佛唯指一心，何法不因心之
 </div><div type='l' n='27'>所立。但了心地，故號總持，悟法無生，名為
-</div><div type='l' n='28'>妙覺。一念超越，豈在繁論者爾。</div><div type='l' n='29'></div><div type='p' n='001-0848c'>
+</div><div type='l' n='28'>妙覺。一念超越，豈在繁論者爾。</div><div type='l' n='29'></div></div><div type='p' n='001-0848c'><div type='l'>
 </div><div type='l' n='1'>
 </div><div type='l' n='2'>
 </div><div type='l' n='3'>
@@ -163,6 +163,10 @@
 </div>
 <!-- new para -->
 <div type='l' n='25'>即說咒曰：
-</div></div></div>
+</div>
+<!-- new para -->
+<div type='l' n='26'>「揭帝　揭諦　波羅揭諦　波羅僧揭諦
+</div><div type='l' n='27'>　菩提　薩婆訶」
+</div><div type='l' n='28'>《般若波羅蜜多心經》</div></div></div>
     </body>
 </TAN-T>

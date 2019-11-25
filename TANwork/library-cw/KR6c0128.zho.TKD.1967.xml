@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!--
 <?xml-model href="../schemas/TAN-T.rnc" type="application/relax-ng-compact-syntax"?>
-<?xml-model href="../schemas/TAN-T.sch" type="application/xml" schematypens="http://purl.oclc.org/dsdl/schematron"?> -->
+<?xml-model href="../schemas/TAN-T.sch" type="application/xml" schematypens="http://purl.oclc.org/dsdl/schematron"?> 
+<!--
 <?xml-model href="http://textalign.net/release/TAN-2018/schemas/TAN-T.rnc" type="application/relax-ng-compact-syntax"?>
-<?xml-model href="http://textalign.net/release/TAN-2018/schemas/TAN-T.sch" type="application/xml" schematypens="http://purl.oclc.org/dsdl/schematron"?>
-<TAN-T xmlns="tag:textalign.net,2015:ns" id="tag:kanripo.org,2019:tan-t.KR6c0128.zho.TKD.2019:text" TAN-version="2018">
+<?xml-model href="http://textalign.net/release/TAN-2018/schemas/TAN-T.sch" type="application/xml" schematypens="http://purl.oclc.org/dsdl/schematron"?> -->
+<TAN-T xmlns="tag:textalign.net,2015:ns" id="tag:kanripo.org,2019:tan-t.KR6c0128.zho.TKD.1967:text" TAN-version="2018">
 <head>
     <name>般若波羅蜜多心經</name>
     <license>
@@ -65,33 +65,37 @@
     <div type='j' n='1'>
 <div type='p' n='0'>
 <!-- new para -->
+
+<!-- new para -->
 </div></div><div type='j' n='2'>
 <div type='p' n='0'>
 <!-- new para -->
-<div type='l' n='1'></div><div type='p' n='05-1035a'>
-</div><div type='l' n='1'><md:KR6c0128_T_001-0848a><!-- ¶ --><!-- ¶ -->般<!-- ¶ -->若波羅蜜多<!-- ¶ --><!-- ¶ --><!-- ¶ --><!-- ¶ --><!-- ¶ --><!-- ¶ --><!-- ¶ --><!-- ¶ --><!-- ¶ --><!-- ¶ --><!-- ¶ --><!-- ¶ --><!-- ¶ --><!-- ¶ --><!-- ¶ --><!-- ¶ --><!-- ¶ --><!-- ¶ -->心經                羽
-</div><div type='l' n='2'><!-- ¶ --><!-- ¶ --><!-- ¶ --><!-- ¶ --><!-- ¶ --><!-- ¶ --><!-- ¶ --><md:KR6c0128_T_001-0848b><!-- ¶ --><!-- ¶ --><!-- ¶ --><!-- ¶ --><!-- ¶ --><!-- ¶ --><!-- ¶ --><!-- ¶ --><!-- ¶ --><!-- ¶ --><!-- ¶ --><!-- ¶ --><!-- ¶ --><!-- ¶ --><!-- ¶ --><!-- ¶ --><!-- ¶ --><!-- ¶ --><!-- ¶ --><!-- ¶ --><!-- ¶ --><!-- ¶ --><!-- ¶ --><!-- ¶ --><!-- ¶ --><!-- ¶ --><!-- ¶ --><!-- ¶ --><md:KR6c0128_T_001-0848c><!-- ¶ --><!-- ¶ --><!-- ¶ --><!-- ¶ --><!-- ¶ --><!-- ¶ -->唐三藏法師玄奘    譯
-</div><div type='l' n='3'><!-- ¶ -->觀自在菩薩行深般若波羅蜜多時
-</div><div type='l' n='4'>照見五<!-- ¶ -->薀皆空度一切若厄舎利子
-</div><div type='l' n='5'>色不異空空不<!-- ¶ -->異色色卽是空空卽
-</div><div type='l' n='6'>是色受想行識亦復如<!-- ¶ -->是舎利子是
-</div><div type='l' n='7'>諸法空相不生不滅不垢不淨<!-- ¶ -->不增
+<div type='l' n='1'></div></div><div type='p' n='05-1035a'><div type='l'>
+</div><div type='l' n='1'><!-- md: KR6c0128-T-001-0848c-->¶¶¶¶¶般若波羅蜜多心經                羽
+</div><div type='l' n='2'>¶唐三藏法師玄奘    譯
+</div><div type='l' n='3'>¶觀自在菩薩行深般若波羅蜜多時
+</div><div type='l' n='4'>照見五¶薀皆空度一切若厄舎利子
+</div><div type='l' n='5'>色不異空空不¶異色色卽是空空卽
+</div><div type='l' n='6'>是色受想行識亦復如¶是舎利子是
+</div><div type='l' n='7'>諸法空相不生不滅不垢不淨¶不增
 </div><div type='l' n='8'> 不減是故空中無色無受想行識無
-</div><div type='l' n='9'>眼<!-- ¶ -->耳鼻舌身意無色聲香味觸法無
-</div><div type='l' n='10'>眼界乃至<!-- ¶ -->無意識界無無明亦無無
-</div><div type='l' n='11'>明盡乃至無老死<!-- ¶ -->亦無老死盡無苦
-</div><div type='l' n='12'>集滅道無智亦無得以無<!-- ¶ -->所得故菩
-</div><div type='l' n='13'>提薩埵依般若波羅蜜多故心無<!-- ¶ -->罣
+</div><div type='l' n='9'>眼¶耳鼻舌身意無色聲香味觸法無
+</div><div type='l' n='10'>眼界乃至¶無意識界無無明亦無無
+</div><div type='l' n='11'>明盡乃至無老死¶亦無老死盡無苦
+</div><div type='l' n='12'>集滅道無智亦無得以無¶所得故菩
+</div><div type='l' n='13'>提薩埵依般若波羅蜜多故心無¶罣
 </div><div type='l' n='14'>㝵 㝵故無有恐怖遠離顚倒夢
-</div><div type='l' n='15'>想究<!-- ¶ -->竟涅槃三世諸佛依般若波羅
-</div><div type='l' n='16'>蜜多故得阿<!-- ¶ -->䅶多羅三藐三菩提故
-</div><div type='l' n='17'>知般若波羅蜜多是<!-- ¶ -->大神呪是大明
-</div><div type='l' n='18'>呪是無上呪是等呪能<!-- ¶ -->除一切
+</div><div type='l' n='15'>想究¶竟涅槃三世諸佛依般若波羅
+</div><div type='l' n='16'>蜜多故得阿¶䅶多羅三藐三菩提故
+</div><div type='l' n='17'>知般若波羅蜜多是¶大神呪是大明
+</div><div type='l' n='18'>呪是無上呪是等呪能¶除一切
 </div><div type='l' n='19'>苦眞實不虛故說般若波羅蜜多呪
-</div><div type='l' n='20'><!-- ¶ -->卽說呪曰
-</div><div type='l' n='21'><!-- ¶ -->揭帝揭帝  般羅揭帝  般羅僧揭
-</div><div type='l' n='22'>帝<!-- ¶ --><!-- ¶ -->  菩提僧莎訶
-</div><div type='l' n='23'><!-- ¶ -->般若波羅蜜多心經
-</div></div></div>
+</div><div type='l' n='20'>¶卽說呪曰
+</div><div type='l' n='21'>¶揭帝揭帝  般羅揭帝  般羅僧揭
+</div><div type='l' n='22'>帝¶¶  菩提僧莎訶
+</div><div type='l' n='23'>¶般若波羅蜜多心經
+</div>
+<!-- new para -->
+</div></div>
     </body>
 </TAN-T>

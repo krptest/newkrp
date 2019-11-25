@@ -14,11 +14,11 @@ lang="zho"
 # user, txtid, title, date, branch, today, body, lang
 # body should contain the preformatted content for the body element
 tan_t="""<?xml version="1.0" encoding="UTF-8"?>
-<!--
 <?xml-model href="../schemas/TAN-T.rnc" type="application/relax-ng-compact-syntax"?>
-<?xml-model href="../schemas/TAN-T.sch" type="application/xml" schematypens="http://purl.oclc.org/dsdl/schematron"?> -->
+<?xml-model href="../schemas/TAN-T.sch" type="application/xml" schematypens="http://purl.oclc.org/dsdl/schematron"?> 
+<!--
 <?xml-model href="http://textalign.net/release/TAN-2018/schemas/TAN-T.rnc" type="application/relax-ng-compact-syntax"?>
-<?xml-model href="http://textalign.net/release/TAN-2018/schemas/TAN-T.sch" type="application/xml" schematypens="http://purl.oclc.org/dsdl/schematron"?>
+<?xml-model href="http://textalign.net/release/TAN-2018/schemas/TAN-T.sch" type="application/xml" schematypens="http://purl.oclc.org/dsdl/schematron"?> -->
 <TAN-T xmlns="tag:textalign.net,2015:ns" id="tag:kanripo.org,2019:tan-t.{txtid}.{lang}.{branch}.2019:text" TAN-version="2018">
 <head>
     <name>{title}</name>
@@ -106,13 +106,14 @@ def parse_text(lines, md=False):
             continue
         elif "<pb:" in l:
 #            l=re.sub("<pb:([^_]+)_([^_]+)_([^>]+)>", "<pb ed='\\2' n='\\3' xml:id='\\1-\\2-\\3'/>", l)
-            l=re.sub("<pb:([^_]+)_([^_]+)_([^>]+)>", "</div><div type='p' n='\\3'>", l)
+            l=re.sub("<pb:([^_]+)_([^_]+)_([^>]+)>", "</div></div><div type='p' n='\\3'><div type='l'>", l)
             lcnt = 0
         if "<md:" in l:
-            l=re.sub("<pb:([^_]+)_([^_]+)_([^>]+)>", "<!-- md: \\1-\\2-\\3-->", l)
+            l=re.sub("<md:([^_]+)_([^_]+)_([^>]+)>", "<!-- md: \\1-\\2-\\3-->", l)
         lcnt += 1
         if md:
-            l=re.sub("¶", f"<!-- ¶ -->", l)
+            pass
+            #l=re.sub("¶", f"<!-- ¶ -->", l)
         else:
             l=re.sub("¶", f"\n<lb n='{lcnt}'/>", l)
         if l == "":
@@ -121,7 +122,8 @@ def parse_text(lines, md=False):
         else:
             if md:
                 l=l+"\n"
-            nl.append(l)    
+            nl.append(l)
+    np.append(nl)    
     lx['TEXT'] = np
     return lx
     
