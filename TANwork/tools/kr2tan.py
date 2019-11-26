@@ -56,6 +56,10 @@ tan_t="""<?xml version="1.0" encoding="UTF-8"?>
             <IRI>tag:textalign.net,2015:div-type:line:physical</IRI>
             <name>physical line</name>
         </div-type>
+        <div-type xml:id="li">
+            <IRI>tag:kanripo.org,2019:div-type:line:inline</IRI>
+            <name>inline text on physical line</name>
+        </div-type>
         <person xml:id="cwittern">
             <IRI>http://viaf.org/viaf/40116626</IRI>
             <IRI>tag:kanripo.org,2014:self</IRI>
@@ -106,7 +110,7 @@ def parse_text(lines, md=False):
             continue
         elif "<pb:" in l:
 #            l=re.sub("<pb:([^_]+)_([^_]+)_([^>]+)>", "<pb ed='\\2' n='\\3' xml:id='\\1-\\2-\\3'/>", l)
-            l=re.sub("<pb:([^_]+)_([^_]+)_([^>]+)>", "</div></div><div type='p' n='\\3'><div type='l'>", l)
+            l=re.sub("<pb:([^_]+)_([^_]+)_([^>]+)>", "</div></div><div type='p' n='\\3'><div type='l' n='x'>", l)
             lcnt = 0
         if "<md:" in l:
             l=re.sub("<md:([^_]+)_([^_]+)_([^>]+)>", "<!-- md: \\1-\\2-\\3-->", l)
