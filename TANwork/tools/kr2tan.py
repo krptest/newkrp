@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
-# postprocess the ChinaXML files 
-# this writes out a flat version
-#import os, sys, codecs, re, shutil, git, datetime
+# TODO: produce A-div versions that reproduce the logical structure 
+# auto-generate complete A-tok versions derived from the baseedition
+#
 import re, os, sys, requests, datetime
 from github import Github
 from dotenv import load_dotenv
