@@ -10,3 +10,9 @@ sample is here:
 [[file:KR6c0128-test/_branches/_xml/KR6c00128.xml][KR6c0128.xml]]
 
 
+* Format
+
+  
+** TEI-KR
+   - a scaled down version of TEI.  Need to provide an ODD file
+   - first draft in [[file:format/sample-format.xml]]
