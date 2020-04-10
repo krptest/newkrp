@@ -12,8 +12,7 @@ lang="zho"
 # need the following vars:
 # user, txtid, title, date, branch, today, body, lang
 # body should contain the preformatted content for the body element
-tei_template="""
-<?xml version="1.0" encoding="UTF-8"?>
+tei_template="""<?xml version="1.0" encoding="UTF-8"?>
 <?xml-model href="http://www.tei-c.org/release/xml/tei/custom/schema/relaxng/tei_all.rng" type="application/xml" schematypens="http://relaxng.org/ns/structure/1.0"?>
 <?xml-model href="http://www.tei-c.org/release/xml/tei/custom/schema/relaxng/tei_all.rng" type="application/xml"
 	schematypens="http://purl.oclc.org/dsdl/schematron"?>
@@ -27,15 +26,13 @@ tei_template="""
             <p>Published by @kanripo on GitHub.com</p>
          </publicationStmt>
          <sourceDesc>
-            <p></p>
+            <p>{branch}</p>
          </sourceDesc>
       </fileDesc>
   </teiHeader>
-  <text xml:lang="{lang}">
-      {front}<body>
-      {body}
-      </body>{back}
-  </text>
+  <sourceDoc>
+      {sd}
+  </sourceDoc>
 </TEI>
 """
 
@@ -55,36 +52,57 @@ def parse_text(lines, md=False):
     lcnt=0
     nl=[]
     np=[]
+    pbxmlid=""
     for l in lines:
+        l=re.sub("¶", "", l)
+        lcnt += 1
         if l.startswith("#+"):
             p = get_property(l)
             lx[p[0]] = p[1]
             continue
         elif l.startswith("#"):
             continue
-        elif "<pb:" in l:
-            l=re.sub("<pb:([^_]+)_([^_]+)_([^>]+)>", "<pb ed='\\2' n='\\3' xml:id='\\1-\\2-\\3'/>", l)
+        elif "<pb:" in l:            
+            np.append(nl)
+            nl=[]
+            pbxmlid=re.sub("<pb:([^_]+)_([^_]+)_([^>]+)>", "\\1_\\2_\\3", l)
+            l=re.sub("<pb:([^_]+)_([^_]+)_([^>]+)>", "</surface>\n<surface xml:id='\\1_\\2_\\3-z'>\n<pb ed='\\2' n='\\3' xml:id='\\1_\\2_\\3'/>", l)
 #            l=re.sub("<pb:([^_]+)_([^_]+)_([^>]+)>", "</div></div><div type='p' n='\\3'><div type='l' n='x'>", l)
             lcnt = 0
         if "<md:" in l:
             l=re.sub("<md:([^_]+)_([^_]+)_([^>]+)>", "<!-- md: \\1-\\2-\\3-->", l)
-        lcnt += 1
+        l = re.sub("&([^;]+);", "<g ref='#\\1'/>", l)
         if md:
             pass
             #l=re.sub("¶", f"<!-- ¶ -->", l)
         else:
-            l=re.sub("¶", f"\n<lb n='{lcnt}'/>", l)
-        if l == "":
-            np.append(nl)
-            nl=[]
-        else:
-            if md:
-                l=l+"\n"
-            nl.append(l)
+            if not re.match("^</surface>", l) and len(l) > 0:
+                l="<line xml:id='%s.%2.2d'>%s</line>\n" % (pbxmlid, lcnt,l)
+            #l=re.sub("¶", f"\n<lb n='{lcnt}'/>", l)
+        # if l == "":
+        #     np.append(nl)
+        #     nl=[]
+        # else:
+        if md:
+            l=l+"\n"
+        nl.append(l)
     np.append(nl)    
     lx['TEXT'] = np
     return lx
-    
+
+def save_text_part(lx, txtid, branch, path):
+    try:
+        os.makedirs(txtid + "/xml/" + branch)
+    except:
+        pass
+    fname = "%s/xml/%s/%s.xml" % (txtid, branch, path[:-4])
+    of=open(fname, "w")
+    of.write("<surfaceGrp xmlns='http://www.tei-c.org/ns/1.0' xml:id='%s'>\n<surface type='dummy'>" % (path[:-4]))
+    for page in lx["TEXT"]:
+        for line in page:
+            of.write(line)
+    of.write("</surface>\n</surfaceGrp>\n")
+
 def convert_text(txtid, user='kanripo'):
     gh=Github(at)
     hs=gh.get_repo(f"{user}/{txtid}")
@@ -92,9 +110,14 @@ def convert_text(txtid, user='kanripo'):
     branches=[a.name for a in hs.get_branches() if not a.name.startswith("_")]
     res=[]
     for branch in branches:
+        try:
+            os.mkdirs(txtid+ "/xml/" + branch)
+        except:
+            pass
         flist = [a.path for a in hs.get_contents("/", ref=branch)]
         pdic = {}
         md = False
+        xi=[]
         for path in flist:
             if path.startswith(txtid):
                 r=requests.get(f"https://raw.githubusercontent.com/{user}/{txtid}/{branch}/{path}")
@@ -104,46 +127,21 @@ def convert_text(txtid, user='kanripo'):
                         md = True
                     lines=cont.split("\n")
                     lx = parse_text(lines, md)
+                    save_text_part(lx, txtid, branch, path)
                 else:
                     return "No valid content found."
                 pdic[path] = lx
-            
+        
         date=datetime.datetime.now()
         today=f"{date:%Y-%m-%d}"
-        front=""
-        back=""
-        body=""
-        jcnt = 0
-        for b in pdic:
-            jcnt += 1
-            s=f"<div type='j' n='{jcnt}'>\n"
-            if "LASTPB" in pdic[b]:
-                lp=pdic[b]['LASTPB']
-                pb=lp[4:-1].split("_")[-1]
-            else:
-                pb="0"
-            s+= f"<div type='p' n='{pb}'>"
-            pcnt = 0
-            lcnt = 0
-            for lx in pdic[b]['TEXT']:
-                pcnt += 1
-                # this is for the paragraph, but for the time being, we will ignore the paragraphs
-                #s+=f"<div type='p' n='{pcnt}'>"
-                s+="\n<!-- new para -->\n" 
-                # lcnt = 0
-                for l in lx:
-                    lcnt +=1
-                    l=re.sub("<lb[^>]+>", "", l)
-                    s+=f"<div type='l' n='{lcnt}'>{l}</div>"
-                    if "type='p'" in l:
-                        lcnt = 0
-                #s+="</div>"
-            s+="</div>"
-            s+="</div>"
-            body += s
-        lx=pdic[b]
-        fname = f"{txtid}.{lang}.{branch}.2019.xml"
-        out=tei_template.format(body=body, front=front, back=back, today=today, user=user, txtid=txtid, title=lx['TITLE'], date=lx['DATE'], branch=branch, lang=lang)
+        sd=""
+        for f in pdic.keys():
+            fn = f[:-4]
+            #b=pdic[f]
+            sd+=f"<xi:include href='{fn}.xml' xmlns:xi='http://www.w3.org/2001/XInclude'/>\n"
+        lx=pdic[f]
+        fname = f"{txtid}/xml/{branch}/{txtid}.xml"
+        out=tei_template.format(sd=sd, today=today, user=user, txtid=txtid, title=lx['TITLE'], date=lx['DATE'], branch=branch)
         of=open(fname, "w")
         of.write(out)
         of.close()
@@ -151,4 +149,8 @@ def convert_text(txtid, user='kanripo'):
 if __name__ == '__main__':
 
     txtid="KR3a0007"
+    try:
+        os.mkdirs(txtid+"/xml")
+    except:
+        pass
     convert_text(txtid)
