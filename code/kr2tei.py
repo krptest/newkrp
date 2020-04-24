@@ -6,6 +6,7 @@ from github import Github
 from dotenv import load_dotenv
 load_dotenv()
 
+puamagic = 1069056
 at=os.environ.get('at')
 lang="zho"
 # template for xml
@@ -16,7 +17,7 @@ tei_template="""<?xml version="1.0" encoding="UTF-8"?>
 <?xml-model href="http://www.tei-c.org/release/xml/tei/custom/schema/relaxng/tei_all.rng" type="application/xml" schematypens="http://relaxng.org/ns/structure/1.0"?>
 <?xml-model href="http://www.tei-c.org/release/xml/tei/custom/schema/relaxng/tei_all.rng" type="application/xml"
 	schematypens="http://purl.oclc.org/dsdl/schematron"?>
-<TEI xmlns="http://www.tei-c.org/ns/1.0" xml:id="{txtid}">
+<TEI xmlns="http://www.tei-c.org/ns/1.0" xml:id="{txtid}_{branch}">
   <teiHeader>
       <fileDesc>
          <titleStmt>
@@ -47,7 +48,7 @@ def get_property(p_in):
     return "Bad property: %s" % (p_in)
 
 # loop through the lines and return a dictionary of metadata and text content
-def parse_text(lines, md=False):
+def parse_text(lines, gjd, md=False):
     lx={'TEXT' : []}
     lcnt=0
     nl=[]
@@ -71,38 +72,67 @@ def parse_text(lines, md=False):
             lcnt = 0
         if "<md:" in l:
             l=re.sub("<md:([^_]+)_([^_]+)_([^>]+)>", "<!-- md: \\1-\\2-\\3-->", l)
-        l = re.sub("&([^;]+);", "<g ref='#\\1'/>", l)
-        if md:
-            pass
-            #l=re.sub("¶", f"<!-- ¶ -->", l)
-        else:
-            if not re.match("^</surface>", l) and len(l) > 0:
-                l="<line xml:id='%s.%2.2d'>%s</line>\n" % (pbxmlid, lcnt,l)
+        #l = re.sub("&([^;]+);", "<g ref='#\\1'/>", l)
+        if "&KR" in l:
+            # only for the sideeffect
+            re.sub("&KR([^;]+);", lambda x : gjd.update({"KR%s" % (x.group(1)) : "%c" % (int(x.group(1)) + puamagic)}), l)
+        l = re.sub("&KR([^;]+);", lambda x : "%c" % (int(x.group(1)) + puamagic ), l)
+        # if md:
+        #     pass
+        #     #l=re.sub("¶", f"<!-- ¶ -->", l)
+        # else:
+        if not re.match("^</surface>", l) and len(l) > 0:
+            l="<line xml:id='%s.%2.2d'>%s</line>\n" % (pbxmlid, lcnt,l)
             #l=re.sub("¶", f"\n<lb n='{lcnt}'/>", l)
         # if l == "":
         #     np.append(nl)
         #     nl=[]
         # else:
-        if md:
-            l=l+"\n"
+        # if md:
+        #     l=l+"\n"
         nl.append(l)
     np.append(nl)    
     lx['TEXT'] = np
     return lx
 
 def save_text_part(lx, txtid, branch, path):
+    if re.match("^[A-Z-]+$", branch):
+        bt = "/doc/"
+    else:
+        bt = "/int/"
     try:
-        os.makedirs(txtid + "/xml/" + branch)
+        os.makedirs(txtid + bt + branch)
     except:
         pass
-    fname = "%s/xml/%s/%s.xml" % (txtid, branch, path[:-4])
+    fname = "%s%s%s/%s.xml" % (txtid, bt, branch, path[:-4])
     of=open(fname, "w")
-    of.write("<surfaceGrp xmlns='http://www.tei-c.org/ns/1.0' xml:id='%s'>\n<surface type='dummy'>" % (path[:-4]))
+    localid=path[:-4].split("_")
+    localid.insert(1, branch)
+    of.write("<surfaceGrp xmlns='http://www.tei-c.org/ns/1.0' xml:id='%s'>\n<surface type='dummy'>" % ("_".join(localid)))
     for page in lx["TEXT"]:
         for line in page:
             of.write(line)
     of.write("</surface>\n</surfaceGrp>\n")
 
+def save_gjd (txtid, branch, gjd, type="entity"):
+    if (type=="entity"):
+        fname = "%s/aux/map/%s_%s-entity-map.xml" % (txtid, txtid, branch)
+    else:
+        fname = "%s/aux/map/%s_%s-entity-g.xml" % (txtid, txtid, branch)        
+    of=open(fname, "w")
+    of.write("""<?xml version="1.0" encoding="UTF-8"?>
+<stylesheet xmlns="http://www.w3.org/1999/XSL/Transform" version="2.0">
+<character-map  name="krx-map">\n""")
+    k = [a for a in  gjd.keys()]
+    k.sort()
+    for kr in k:
+        if (type=="entity"):
+            of.write("""<output-character character="%s" string="&amp;%s;"/>\n""" % (gjd[kr], kr))
+        else:
+            of.write("""<output-character character="%s" string="&lt;g ref=&#34;%s&#34;/&gt;"/>\n""" % (gjd[kr], kr))
+    of.write("""</character-map>\n</stylesheet>\n""")
+    of.close()
+    
 def convert_text(txtid, user='kanripo'):
     gh=Github(at)
     hs=gh.get_repo(f"{user}/{txtid}")
@@ -110,14 +140,19 @@ def convert_text(txtid, user='kanripo'):
     branches=[a.name for a in hs.get_branches() if not a.name.startswith("_")]
     res=[]
     for branch in branches:
+        if re.match("^[A-Z-]+$", branch):
+            bt = "/doc/"
+        else:
+            bt = "/int/"
         try:
-            os.mkdirs(txtid+ "/xml/" + branch)
+            os.makedirs(txtid+ bt + branch)
         except:
             pass
         flist = [a.path for a in hs.get_contents("/", ref=branch)]
         pdic = {}
         md = False
         xi=[]
+        gjd = {}
         for path in flist:
             if path.startswith(txtid):
                 r=requests.get(f"https://raw.githubusercontent.com/{user}/{txtid}/{branch}/{path}")
@@ -126,7 +161,7 @@ def convert_text(txtid, user='kanripo'):
                     if "<md:" in cont:
                         md = True
                     lines=cont.split("\n")
-                    lx = parse_text(lines, md)
+                    lx = parse_text(lines, gjd, md)
                     save_text_part(lx, txtid, branch, path)
                 else:
                     return "No valid content found."
@@ -135,12 +170,14 @@ def convert_text(txtid, user='kanripo'):
         date=datetime.datetime.now()
         today=f"{date:%Y-%m-%d}"
         sd=""
+        save_gjd (txtid, branch, gjd, "entity")
+        save_gjd (txtid, branch, gjd, "g")
         for f in pdic.keys():
             fn = f[:-4]
             #b=pdic[f]
             sd+=f"<xi:include href='{fn}.xml' xmlns:xi='http://www.w3.org/2001/XInclude'/>\n"
         lx=pdic[f]
-        fname = f"{txtid}/xml/{branch}/{txtid}.xml"
+        fname = f"{txtid}{bt}{branch}/{txtid}.xml"
         out=tei_template.format(sd=sd, today=today, user=user, txtid=txtid, title=lx['TITLE'], date=lx['DATE'], branch=branch)
         of=open(fname, "w")
         of.write(out)
@@ -150,7 +187,9 @@ if __name__ == '__main__':
 
     txtid="KR3a0007"
     try:
-        os.mkdirs(txtid+"/xml")
+        os.makedirs(txtid+"/aux/map")
+        os.makedirs(txtid+"/doc")
+        os.makedirs(txtid+"/int")
     except:
         pass
     convert_text(txtid)
