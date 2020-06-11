@@ -6,7 +6,8 @@ from github import Github
 from dotenv import load_dotenv
 load_dotenv()
 
-puamagic = 1069056
+puamagic = int(0x107000)
+
 if os.path.exists('../../.env'):
     print('Importing environment from .env...')
     for line in open('.env'):
@@ -76,10 +77,10 @@ def parse_text_to_p(lines, gjd, md=False):
             lcnt = 0
         if "<md:" in l:
             l=re.sub("<md:([^_]+)_([^_]+)_([^>]+)>", "", l)
-        if "&KR" in l:
+        if "&GJ" in l:
             # only for the sideeffect
-            re.sub("&KR([^;]+);", lambda x : gjd.update({"KR%s" % (x.group(1)) : "%c" % (int(x.group(1)) + puamagic)}), l)
-        l = re.sub("&KR([^;]+);", lambda x : "%c" % (int(x.group(1)) + puamagic ), l)
+            re.sub("&GJ([^;]+);", lambda x : gjd.update({"GJ%s" % (x.group(1)) : "%c" % (int(x.group(1),16) + puamagic)}), l)
+        l = re.sub("&GJ([^;]+);", lambda x : "%c" % (int(x.group(1),16) + puamagic ), l)
         # if md:
         #     pass
         #     #l=re.sub("¶", f"<!-- ¶ -->", l)
@@ -127,16 +128,25 @@ def parse_text(lines, gjd, md=False):
         if "<md:" in l:
             l=re.sub("<md:([^_]+)_([^_]+)_([^>]+)>", "<!-- md: \\1-\\2-\\3-->", l)
         #l = re.sub("&([^;]+);", "<g ref='#\\1'/>", l)
-        if "&KR" in l:
+        if "&GJ" in l:
             # only for the sideeffect
-            re.sub("&KR([^;]+);", lambda x : gjd.update({"KR%s" % (x.group(1)) : "%c" % (int(x.group(1)) + puamagic)}), l)
-        l = re.sub("&KR([^;]+);", lambda x : "%c" % (int(x.group(1)) + puamagic ), l)
+            re.sub("&GJ([^;]+);", lambda x : gjd.update({"GJ%s" % (x.group(1)) : "%c" % (int(x.group(1),16) + puamagic)}), l)
+        l = re.sub("&GJ([^;]+);", lambda x : "%c" % (int(x.group(1),16) + puamagic ), l)
         # if md:
         #     pass
         #     #l=re.sub("¶", f"<!-- ¶ -->", l)
         # else:
+        lz = l.count("(")
+        rz = l.count(")")
+        if (rz > 0) and (rz == lz):
+            if (l.index(")") < l.index("(")):
+                l = "<note>" + l + "</note>"
         l = l.replace("(", "<note>")
+        if (lz > rz):
+            l += "</note>"
         l = l.replace(")", "</note>")
+        if (rz > lz):
+            l = "<note>" + l
         if not re.match("^</surface>", l) and len(l) > 0:
             l="<line xml:id='%s.%2.2d'>%s</line>\n" % (pbxmlid, lcnt,l)
             #l=re.sub("¶", f"\n<lb n='{lcnt}'/>", l)
@@ -201,7 +211,7 @@ def save_gjd (txtid, branch, gjd, type="entity"):
     of.close()
     
 def convert_text(txtid, user='kanripo'):
-    txin="/home/chris/Dropbox/hist25/%s" % (txtid)
+    txin="/home/chris/projects/hist25/%s" % (txtid)
     txtid = txtid.replace("KR", "KX")
     branches=['ZHSJ']
     res=[]
