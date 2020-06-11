@@ -146,12 +146,14 @@ def parse_text(lines, gjd, md=False):
         # else:
         # if md:
         #     l=l+"\n"
+        l = l.replace("KR", "KX")
         nl.append(l)
     np.append(nl)    
     lx['TEXT'] = np
     return lx
 
 def save_text_part(lx, txtid, branch, path):
+    path = path.replace("KR", "KX")
     if re.match("^[A-Z-]+$", branch):
         bt = "/doc/"
     else:
@@ -164,12 +166,14 @@ def save_text_part(lx, txtid, branch, path):
     of=open(fname, "w")
     localid=path[:-4].split("_")
     localid.insert(1, branch)
+    #localid = localid.replace("KR", "KX")
     if bt == "/int/":
         of.write("<div xmlns='http://www.tei-c.org/ns/1.0'><p xml:id='%s'>" % ("_".join(localid)))
     else:
         of.write("<surfaceGrp xmlns='http://www.tei-c.org/ns/1.0' xml:id='%s'>\n<surface type='dummy'>" % ("_".join(localid)))
     for page in lx["TEXT"]:
         for line in page:
+            line = line.replace("KR", "KX")
             of.write(line)
 
     if bt == "/int/":
@@ -198,6 +202,7 @@ def save_gjd (txtid, branch, gjd, type="entity"):
     
 def convert_text(txtid, user='kanripo'):
     txin="/home/chris/Dropbox/hist25/%s" % (txtid)
+    txtid = txtid.replace("KR", "KX")
     branches=['ZHSJ']
     res=[]
     for branch in branches:
@@ -234,6 +239,7 @@ def convert_text(txtid, user='kanripo'):
         save_gjd (txtid, branch, gjd, "g")
         for f in pdic.keys():
             fn = f[:-4]
+            fn = fn.replace("KR", "KX")
             #b=pdic[f]
             sd+=f"<xi:include href='{fn}.xml' xmlns:xi='http://www.w3.org/2001/XInclude'/>\n"
         lx=pdic[f]
@@ -254,11 +260,11 @@ if __name__ == '__main__':
     except:
         print ("Textid should be given as argument.")
         sys.exit()
-
+    ntxtid = txtid.replace("KR", "KX")
     try:
-        os.makedirs(txtid+"/aux/map")
-        os.makedirs(txtid+"/doc")
-        os.makedirs(txtid+"/int")
+        os.makedirs(ntxtid+"/aux/map")
+        os.makedirs(ntxtid+"/doc")
+        os.makedirs(ntxtid+"/int")
     except:
         pass
     convert_text(txtid)

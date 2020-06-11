@@ -146,30 +146,36 @@ def parse_text(lines, gjd, md=False):
         # else:
         # if md:
         #     l=l+"\n"
+        l = l.replace("KR", "KX")
         nl.append(l)
     np.append(nl)    
     lx['TEXT'] = np
     return lx
 
 def save_text_part(lx, txtid, branch, path):
+    path = path.replace("KR", "KX")
+    ntxtid = txtid.replace("KR", "KX")
     if re.match("^[A-Z-]+$", branch):
         bt = "/doc/"
     else:
         bt = "/int/"
     try:
-        os.makedirs(txtid + bt + branch)
+        os.makedirs(ntxtid + bt + branch)
     except:
         pass
-    fname = "%s%s%s/%s.xml" % (txtid, bt, branch, path[:-4])
+    fname = "%s%s%s/%s.xml" % (ntxtid, bt, branch, path[:-4])
     of=open(fname, "w")
     localid=path[:-4].split("_")
     localid.insert(1, branch)
+    lid = "_".join(localid)
+    lid=lid.replace("KR", "KX")
     if bt == "/int/":
-        of.write("<div xmlns='http://www.tei-c.org/ns/1.0'><p xml:id='%s'>" % ("_".join(localid)))
+        of.write("<div xmlns='http://www.tei-c.org/ns/1.0'><p xml:id='%s'>" % (lid))
     else:
-        of.write("<surfaceGrp xmlns='http://www.tei-c.org/ns/1.0' xml:id='%s'>\n<surface type='dummy'>" % ("_".join(localid)))
+        of.write("<surfaceGrp xmlns='http://www.tei-c.org/ns/1.0' xml:id='%s'>\n<surface type='dummy'>" % (lid))
     for page in lx["TEXT"]:
         for line in page:
+            line = line.replace("KR", "KX")
             of.write(line)
 
     if bt == "/int/":
@@ -202,16 +208,18 @@ def convert_text(txtid, user='kanripo'):
     #get the branches
     branches=[a.name for a in hs.get_branches() if not a.name.startswith("_")]
     res=[]
+    ntxtid = txtid.replace("KR", "KX")
     for branch in branches:
         if re.match("^[A-Z-]+$", branch):
             bt = "/doc/"
         else:
             bt = "/int/"
         try:
-            os.makedirs(txtid+ bt + branch)
+            os.makedirs(ntxtid+ bt + branch)
         except:
             pass
         flist = [a.path for a in hs.get_contents("/", ref=branch)]
+        print (branch, len(flist))
         pdic = {}
         md = False
         xi=[]
@@ -229,25 +237,32 @@ def convert_text(txtid, user='kanripo'):
                     else:
                         lx = parse_text(lines, gjd, md)
                     save_text_part(lx, txtid, branch, path)
+                    pdic[path] = lx
+                    #print(path, pdic[path])
                 else:
                     return "No valid content found."
-                pdic[path] = lx
-        
+
+
         date=datetime.datetime.now()
         today=f"{date:%Y-%m-%d}"
         sd=""
-        save_gjd (txtid, branch, gjd, "entity")
-        save_gjd (txtid, branch, gjd, "g")
+        save_gjd (ntxtid, branch, gjd, "entity")
+        save_gjd (ntxtid, branch, gjd, "g")
         for f in pdic.keys():
             fn = f[:-4]
+            fn = fn.replace("KR", "KX")
             #b=pdic[f]
             sd+=f"<xi:include href='{fn}.xml' xmlns:xi='http://www.w3.org/2001/XInclude'/>\n"
-        lx=pdic[f]
-        fname = f"{txtid}{bt}{branch}/{txtid}.xml"
+        try:
+            lx=pdic[f]
+        except:
+            print (f, flist, len(pdic), r.status_code)
+            sys.exit()
+        fname = f"{ntxtid}{bt}{branch}/{ntxtid}.xml"
         if bt == "/int/":
-            out=tei_template.format(sd="<text><body>\n%s</body></text>" % (sd), today=today, user=user, txtid=txtid, title=lx['TITLE'], date=lx['DATE'], branch=branch)
+            out=tei_template.format(sd="<text><body>\n%s</body></text>" % (sd), today=today, user=user, txtid=ntxtid, title=lx['TITLE'], date=lx['DATE'], branch=branch)
         else:
-            out=tei_template.format(sd="<sourceDoc>\n%s</sourceDoc>" % (sd), today=today, user=user, txtid=txtid, title=lx['TITLE'], date=lx['DATE'], branch=branch)
+            out=tei_template.format(sd="<sourceDoc>\n%s</sourceDoc>" % (sd), today=today, user=user, txtid=ntxtid, title=lx['TITLE'], date=lx['DATE'], branch=branch)
         of=open(fname, "w")
         of.write(out)
         of.close()
@@ -259,10 +274,11 @@ if __name__ == '__main__':
     except:
         print ("Textid should be given as argument.")
         sys.exit()
+    ntxtid = txtid.replace("KR", "KX")
     try:
-        os.makedirs(txtid+"/aux/map")
-        os.makedirs(txtid+"/doc")
-        os.makedirs(txtid+"/int")
+        os.makedirs(ntxtid+"/aux/map")
+        os.makedirs(ntxtid+"/doc")
+        os.makedirs(ntxtid+"/int")
     except:
         pass
     convert_text(txtid)
