@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# KR to TEI format.
+# Hist to TEI format.
 #
 import re, os, sys, requests, datetime
 from github import Github
@@ -197,10 +197,8 @@ def save_gjd (txtid, branch, gjd, type="entity"):
     of.close()
     
 def convert_text(txtid, user='kanripo'):
-    gh=Github(at)
-    hs=gh.get_repo(f"{user}/{txtid}")
-    #get the branches
-    branches=[a.name for a in hs.get_branches() if not a.name.startswith("_")]
+    txin="/home/chris/Dropbox/hist25/%s" % (txtid)
+    branches=['ZHSJ']
     res=[]
     for branch in branches:
         if re.match("^[A-Z-]+$", branch):
@@ -211,28 +209,24 @@ def convert_text(txtid, user='kanripo'):
             os.makedirs(txtid+ bt + branch)
         except:
             pass
-        flist = [a.path for a in hs.get_contents("/", ref=branch)]
+        flist = [a for a in os.listdir(txin) if a.endswith(".txt")]
+        flist.sort()
         pdic = {}
         md = False
         xi=[]
         gjd = {}
-        for path in flist:
-            if path.startswith(txtid):
-                r=requests.get(f"https://raw.githubusercontent.com/{user}/{txtid}/{branch}/{path}")
-                if r.status_code == 200:
-                    cont=r.content.decode(r.encoding)
-                    if "<md:" in cont:
-                        md = True
-                    lines=cont.split("\n")
-                    if bt == "/int/":
-                        lx = parse_text_to_p(lines, gjd, md)
-                    else:
-                        lx = parse_text(lines, gjd, md)
-                    save_text_part(lx, txtid, branch, path)
-                else:
-                    return "No valid content found."
-                pdic[path] = lx
-        
+        for fn in flist:
+            path="%s/%s" % (txin, fn)
+            cont=open(path, "r").read()
+            if "<md:" in cont:
+                md = True
+            lines=cont.split("\n")
+            if bt == "/int/":
+                lx = parse_text_to_p(lines, gjd, md)
+            else:
+                lx = parse_text(lines, gjd, md)
+            save_text_part(lx, txtid, branch, fn)
+            pdic[fn] = lx
         date=datetime.datetime.now()
         today=f"{date:%Y-%m-%d}"
         sd=""
@@ -243,6 +237,7 @@ def convert_text(txtid, user='kanripo'):
             #b=pdic[f]
             sd+=f"<xi:include href='{fn}.xml' xmlns:xi='http://www.w3.org/2001/XInclude'/>\n"
         lx=pdic[f]
+        lx['DATE'] = today
         fname = f"{txtid}{bt}{branch}/{txtid}.xml"
         if bt == "/int/":
             out=tei_template.format(sd="<text><body>\n%s</body></text>" % (sd), today=today, user=user, txtid=txtid, title=lx['TITLE'], date=lx['DATE'], branch=branch)
@@ -259,6 +254,7 @@ if __name__ == '__main__':
     except:
         print ("Textid should be given as argument.")
         sys.exit()
+
     try:
         os.makedirs(txtid+"/aux/map")
         os.makedirs(txtid+"/doc")
