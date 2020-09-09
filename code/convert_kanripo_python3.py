@@ -113,8 +113,11 @@ def conv(indirName, txtid, gjd):
         if "&GJ" in line:
             # only for the sideeffect
             re.sub("&GJ([^;]+);", lambda x : gjd.update({"GJ%s" % (x.group(1)) : "%c" % (int(x.group(1),16) + puamagic)}), line)
+        #elif re.match("&[^;]+;", line):
+            # other gaiji, fttb just escape them...
+            # line = re.sub("&([^;]+);", "[\1]", line)
         line = re.sub("&GJ([^;]+);", lambda x : "%c" % (int(x.group(1),16) + puamagic ), line)
-
+        line = re.sub(r"&([^;]+);", "[\\1]", line)
         # Reset teiline each line
         teiline = ""
         # Set the header tags, and close <div1> if open
@@ -140,6 +143,7 @@ def conv(indirName, txtid, gjd):
           n=nx[1]
           last = "%3.3d-%s" % (int(nx[0]), n)
           npb[-1] = last
+          npb[0] = ntxtid
           cpb="_".join(npb)
           pcnt += 1
           ## the following disturbs the note counting, disabling for the moment

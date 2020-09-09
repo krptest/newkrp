@@ -56,7 +56,7 @@ def get_property(p_in):
 # loop through the lines and return a dictionary of metadata and text content
 # gjd is the dictionary to hold gaiji encountered, md is wether we want to care about <md: style tags.
 # here we parse the text into paragraphs, instead of surface elements
-def parse_text_to_p(lines, gjd, md=False):
+def parse_text_to_p(lines, gjd, txtid, md=False,):
     lx={'TEXT' : []}
     lcnt=0
     nl=[]
@@ -72,8 +72,8 @@ def parse_text_to_p(lines, gjd, md=False):
         elif l.startswith("#"):
             continue
         elif "<pb:" in l:
-            pbxmlid=re.sub("<pb:([^_]+)_([^_]+)_([^>]+)>", "\\1_\\2_\\3", l)
-            l=re.sub("<pb:([^_]+)_([^_]+)_([^>]+)>", "<pb ed='\\2' n='\\3' xml:id='\\1_\\2_\\3'/>", l)
+            pbxmlid=re.sub("<pb:([^_]+)_([^_]+)_([^>]+)>", f"{txtid}_\\2_\\3", l)
+            l=re.sub("<pb:([^_]+)_([^_]+)_([^>]+)>", f"<pb ed='\\2' n='\\3' xml:id='{txtid}_\\2_\\3'/>", l)
             lcnt = 0
         if "<md:" in l:
             l=re.sub("<md:([^_]+)_([^_]+)_([^>]+)>", "", l)
@@ -81,6 +81,7 @@ def parse_text_to_p(lines, gjd, md=False):
             # only for the sideeffect
             re.sub("&GJ([^;]+);", lambda x : gjd.update({"GJ%s" % (x.group(1)) : "%c" % (int(x.group(1),16) + puamagic)}), l)
         l = re.sub("&GJ([^;]+);", lambda x : "%c" % (int(x.group(1),16) + puamagic ), l)
+        l = re.sub(r"&([^;]+);", "[\\1]", l)
         # if md:
         #     pass
         #     #l=re.sub("¶", f"<!-- ¶ -->", l)
@@ -103,7 +104,7 @@ def parse_text_to_p(lines, gjd, md=False):
 # loop through the lines and return a dictionary of metadata and text content
 # gjd is the dictionary to hold gaiji encountered, md is wether we want to care about <md: style tags.
 # 
-def parse_text(lines, gjd, md=False):
+def parse_text(lines, gjd, txtid, md=False):
     lx={'TEXT' : []}
     lcnt=0
     nl=[]
@@ -121,8 +122,8 @@ def parse_text(lines, gjd, md=False):
         elif "<pb:" in l:            
             np.append(nl)
             nl=[]
-            pbxmlid=re.sub("<pb:([^_]+)_([^_]+)_([^>]+)>", "\\1_\\2_\\3", l)
-            l=re.sub("<pb:([^_]+)_([^_]+)_([^>]+)>", "</surface>\n<surface xml:id='\\1_\\2_\\3-z'>\n<pb ed='\\2' n='\\3' xml:id='\\1_\\2_\\3'/>", l)
+            pbxmlid=re.sub("<pb:([^_]+)_([^_]+)_([^>]+)>", f"{txtid}_\\2_\\3", l)
+            l=re.sub("<pb:([^_]+)_([^_]+)_([^>]+)>", f"</surface>\n<surface xml:id='{txtid}_\\2_\\3-z'>\n<pb ed='\\2' n='\\3' xml:id='{txtid}_\\2_\\3'/>", l)
 #            l=re.sub("<pb:([^_]+)_([^_]+)_([^>]+)>", "</div></div><div type='p' n='\\3'><div type='l' n='x'>", l)
             lcnt = 0
         if "<md:" in l:
@@ -132,6 +133,7 @@ def parse_text(lines, gjd, md=False):
             # only for the sideeffect
             re.sub("&GJ([^;]+);", lambda x : gjd.update({"GJ%s" % (x.group(1)) : "%c" % (int(x.group(1),16) + puamagic)}), l)
         l = re.sub("&GJ([^;]+);", lambda x : "%c" % (int(x.group(1),16) + puamagic ), l)
+        l = re.sub(r"&([^;]+);", "[\\1]", l)
         # if md:
         #     pass
         #     #l=re.sub("¶", f"<!-- ¶ -->", l)
@@ -237,9 +239,9 @@ def convert_text(txtid, user='kanripo'):
                 md = True
             lines=cont.split("\n")
             if bt == "/int/":
-                lx = parse_text_to_p(lines, gjd, md)
+                lx = parse_text_to_p(lines, gjd, txtid, md)
             else:
-                lx = parse_text(lines, gjd, md)
+                lx = parse_text(lines, gjd, txtid, md)
             save_text_part(lx, txtid, branch, fn)
             pdic[fn] = lx
         date=datetime.datetime.now()
