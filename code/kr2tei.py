@@ -52,6 +52,16 @@ def get_property(p_in):
         return (p1[0], " ".join(p1[1:]))
     return "Bad property: %s" % (p_in)
 
+def combine_note(lines):
+    for i, l in enumerate(lines):
+        if l.endswith("</note>\n"):
+            print("note detected", l)
+            if i < len(l):
+                if lines[i+1].startswith("<note>"):
+                    lines[i] = l.replace("</note>\n", "\n")
+                    lines[i+1] = lines[i+1][6:]
+    return lines
+
 # loop through the lines and return a dictionary of metadata and text content
 # gjd is the dictionary to hold gaiji encountered, md is wether we want to care about <md: style tags.
 # here we parse the text into paragraphs, instead of surface elements
@@ -90,12 +100,14 @@ def parse_text_to_p(lines, gjd, md=False):
         if not re.match("^</p>", l) and len(l) > 0:
             l="%s\n" % (l)
         if l == "":
+            nl=combine_note(nl)
             np.append(nl)
             nl=[]
         else:
             if md:
                 l=l+"\n"
         nl.append(l)
+    nl=combine_note(nl)
     np.append(nl)
     lx['TEXT'] = np
     return lx
@@ -155,7 +167,7 @@ def parse_text(lines, gjd, md=False):
         #     l=l+"\n"
         l = l.replace("KR", "KR")
         nl.append(l)
-    np.append(nl)    
+    np.append(nl)
     lx['TEXT'] = np
     return lx
 
