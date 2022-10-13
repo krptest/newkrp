@@ -55,7 +55,6 @@ def get_property(p_in):
 def combine_note(lines):
     for i, l in enumerate(lines):
         if l.endswith("</note>\n"):
-            print("note detected", l)
             if i < len(l):
                 if lines[i+1].startswith("<note>"):
                     lines[i] = l.replace("</note>\n", "\n")
@@ -227,6 +226,7 @@ def save_gjd (txtid, branch, gjd, type="entity"):
     of.write("""<?xml version="1.0" encoding="UTF-8"?>
 <stylesheet xmlns="http://www.w3.org/1999/XSL/Transform" version="2.0">
 <character-map  name="krx-map">\n""")
+    of.write("""  <xsl:output-character character="¶" string="&lt;lb/&gt;"/>""")
     k = [a for a in  gjd.keys()]
     k.sort()
     for kr in k:
