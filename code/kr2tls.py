@@ -37,6 +37,9 @@ tei_template="""<?xml version="1.0" encoding="UTF-8"?>
             <p>{branch}</p>
          </sourceDesc>
       </fileDesc>
+     <revisionDesc>
+        <change resp="#chris"><p>Converted to TEI format for TLS on <date>{today}</date>.</p></change>
+     </revisionDesc>
   </teiHeader>
       {sd}
 </TEI>
@@ -84,7 +87,7 @@ def parse_text_to_p(lines, gjd, md=False):
             l=re.sub("<pb:([^_]+)_([^_]+)_([^>]+)>", "<pb ed='\\2' n='\\3' xml:id='\\1_\\2_\\3'/>", l)
             lcnt = 0
         if "<md:" in l:
-            l=re.sub("<md:([^_]+)_([^_]+)_([^>]+)>", "", l)
+            l=re.sub("<md:([^_]+)_([^_]+)_([^>]+)>", "<pb ed='\\2' n='\\3' xml:id='\\1_\\2_\\3'/>", l)
         if "&KR" in l:
             # only for the sideeffect
             re.sub("&KR([^;]+);", lambda x : gjd.update({"KR%s" % (x.group(1)) : "%c" % (int(x.group(1)) + puamagic)}), l)
@@ -96,6 +99,7 @@ def parse_text_to_p(lines, gjd, md=False):
         l = l.replace("(", "<note>")
         l = l.replace(")¶", "¶</note>")
         l = l.replace(")", "</note>")
+  #      l=re.sub("¶", "<lb/>", l)
         if not re.match("^</p>", l) and len(l) > 0:
             l="%s\n" % (l)
         if l == "":
